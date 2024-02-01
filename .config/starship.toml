@@ -78,9 +78,7 @@ $time\
 $status\
 $container\
 $shell\
-$fill\
 $directory\
-$fill\
 $git_branch\
 $git_commit\
 $git_state\
@@ -417,7 +415,7 @@ detect_folders = []
 
 [fill]
 style = "bold black"
-symbol = "-"
+symbol = " "
 disabled = false
 
 [fossil_branch]
