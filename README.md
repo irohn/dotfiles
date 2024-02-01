@@ -1,8 +1,5 @@
-- 👋 Hi, I’m @irohn
-- 👀 I’m interested in everything
-- 🌱 I’m currently learning anything I can
-- 💞️ I’m looking to collaborate on interesting projects
-- 📫 Contact me at orisneh@gmail.com
+# Home for my personal configurations
+Here you can find most of my configuration files
 
 <!---
 irohn/irohn is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
