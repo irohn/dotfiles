@@ -11,7 +11,7 @@ export ZSH=$HOME/.oh-my-zsh
 plugins=(git)
 
 # Source oh-my-zsh.sh
-[ -f "$ZSH"/oh-my-zsh ] && source "$ZSH"/oh-my-zsh.sh
+[ -f "$ZSH"/oh-my-zsh.sh ] && source "$ZSH"/oh-my-zsh.sh
 
 # Source all files in alias.d
 [ -d "$HOME"/.config/alias.d ] && for file in /Users/ori/.config/alias.d/*; do source $file; done   
