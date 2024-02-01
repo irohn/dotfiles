@@ -5,7 +5,7 @@
 export ZSH=$HOME/.oh-my-zsh
 
 # Source custom environment variables
-[ -d "$HOME"/.config/environment ] && for file in /Users/ori/.config/environments/*; do source $file; done
+[ -d "$HOME"/.config/environment ] && for file in /Users/ori/.config/environment/*; do source $file; done
 
 # Oh-My-Zsh plugins
 plugins=(git)
@@ -19,6 +19,6 @@ plugins=(git)
 # Add local bin directory to PATH
 [ -d "$HOME"/.local/bin ] && export PATH="$HOME"/.local/bin:"$PATH" 
 
-# Evaluate starship prompt (keep at end of file)
+# Evaluate starship prompt
 command -v starship > /dev/null 2>&1 && eval "$(starship init zsh)"
 
