@@ -71,10 +71,8 @@ $env_var\
 $crystal\
 $custom\
 $sudo\
-$cmd_duration\
 $jobs\
 $battery\
-$time\
 $status\
 $container\
 $shell\
@@ -85,6 +83,8 @@ $git_state\
 $git_metrics\
 $git_status\
 $fill\
+$time\
+$cmd_duration\
 $kubernetes\
 $line_break\
 $character\
@@ -304,7 +304,7 @@ truncation_length = 3
 truncate_to_repo = true
 fish_style_pwd_dir_length = 0
 use_logical_path = true
-format = " [$path]($style)[$read_only]($read_only_style) "
+format = "[$path]($style)[$read_only]($read_only_style) "
 repo_root_format = "[$before_root_path]($before_repo_root_style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
 style = "#658594 bold"
 disabled = false
@@ -445,7 +445,7 @@ detect_env_vars = []
 [gcloud.project_aliases]
 
 [git_branch]
-format = " on [$symbol$branch(:$remote_branch)]($style) "
+format = "on [$symbol$branch(:$remote_branch)]($style) "
 symbol = " "
 style = "bold purple"
 truncation_length = 9223372036854775807
@@ -673,7 +673,7 @@ detect_folders = []
 
 [kubernetes]
 symbol = "󱃾 "
-format = ' [$symbol$context( \($namespace\))]($style) '
+format = '[$symbol$context( \($namespace\))]($style) '
 style = "cyan bold"
 disabled = false
 detect_extensions = []

@@ -10,3 +10,5 @@ cdf() {
     fi
     cd $selection
 }
+
+command -v bat > /dev/null 2>&1 && alias cat='bat -Pp'
