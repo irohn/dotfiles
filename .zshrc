@@ -5,7 +5,7 @@
 export ZSH=$HOME/.oh-my-zsh
 
 # Source custom environment variables
-[ -d "$HOME"/.config/environment ] && for file in /Users/ori/.config/environment/*; do source $file; done
+[ -d "$HOME"/.config/environment ] && for file in "$HOME"/.config/environment/*; do source $file; done
 
 # Oh-My-Zsh plugins
 plugins=(git)
@@ -14,7 +14,7 @@ plugins=(git)
 [ -f "$ZSH"/oh-my-zsh.sh ] && source "$ZSH"/oh-my-zsh.sh
 
 # Source all files in alias.d
-[ -d "$HOME"/.config/alias.d ] && for file in /Users/ori/.config/alias.d/*; do source $file; done   
+[ -d "$HOME"/.config/alias.d ] && for file in "$HOME"/.config/alias.d/*; do source $file; done   
 
 # Add local bin directory to PATH
 [ -d "$HOME"/.local/bin ] && export PATH="$HOME"/.local/bin:"$PATH" 
