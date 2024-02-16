@@ -1,2 +1,4 @@
 .config/nvim/lazy-lock.json
+.config/nvim/*
+!.config/nvim/lua/custom
 .config/tmux/plugins/*

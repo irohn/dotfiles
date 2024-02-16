@@ -5,20 +5,28 @@
 export ZSH=$HOME/.oh-my-zsh
 
 # Source custom environment variables
-[ -d "$HOME"/.config/environment ] && for file in "$HOME"/.config/environment/*; do source $file; done
+[ -d "$HOME"/.config/environment ] && \
+  for file in "$HOME"/.config/environment/*; do source $file; done
 
 # Oh-My-Zsh plugins
-plugins=(git)
+plugins=(git kubectl)
 
 # Source oh-my-zsh.sh
-[ -f "$ZSH"/oh-my-zsh.sh ] && source "$ZSH"/oh-my-zsh.sh
+[ -f "$ZSH"/oh-my-zsh.sh ] && \
+  source "$ZSH"/oh-my-zsh.sh
 
 # Source all files in alias.d
-[ -d "$HOME"/.config/alias.d ] && for file in "$HOME"/.config/alias.d/*; do source $file; done   
+[ -d "$HOME"/.config/alias.d ] && \
+  for file in "$HOME"/.config/alias.d/*; do source $file; done   
 
 # Add local bin directory to PATH
-[ -d "$HOME"/.local/bin ] && export PATH="$HOME"/.local/bin:"$PATH" 
+[ -d "$HOME"/.local/bin ] && \
+  export PATH="$HOME"/.local/bin:"$PATH" 
+
+command -v zoxide > /dev/null 2>&1 && \
+  eval "$(zoxide init --cmd cd zsh)"
 
 # Evaluate starship prompt
-command -v starship > /dev/null 2>&1 && eval "$(starship init zsh)"
+command -v starship > /dev/null 2>&1 && \
+  eval "$(starship init zsh)"
 
