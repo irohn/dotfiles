@@ -1,5 +1,13 @@
 local plugins = {
 
+  {
+    "jose-elias-alvarez/null-ls.nvim",
+    ft = { "python" },
+    opts = function()
+      return require "custom.configs.null-ls"
+    end,
+  },
+
   -- [[ Extend Treesitter ]]
   {
     "nvim-treesitter/nvim-treesitter",
@@ -60,6 +68,22 @@ local plugins = {
         server_opts_overrides = {},
       })
     end,
+  },
+
+  {
+    "williamboman/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "black",
+        "lua-language-server",
+        "html-lsp",
+        "prettier",
+        "stylua",
+        "pyright",
+        "mypy",
+        "ruff",
+      },
+    },
   },
 
   {
