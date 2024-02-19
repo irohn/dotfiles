@@ -1,4 +1,5 @@
 format = """
+$os\
 $username\
 $hostname\
 $localip\
@@ -77,20 +78,18 @@ $crystal\
 $custom\
 $sudo\
 $cmd_duration\
-$line_break\
 $jobs\
 $battery\
 $time\
 $status\
-$os\
 $container\
 $shell\
 $character"""
 
 
 [character]
-success_symbol = '[➜](bold green) '
-error_symbol = '[✗](bold red) '
+success_symbol = '[➜](bold green)'
+error_symbol = '[✗](bold red)'
 
 [aws]
 symbol = "  "
@@ -179,6 +178,9 @@ symbol = " "
 [ocaml]
 symbol = " "
 
+[os]
+disabled = false
+format = " [$symbol](white) "
 [os.symbols]
 Alpaquita = " "
 Alpine = " "
