@@ -33,7 +33,7 @@ local plugins = {
             jump_next = "]]",
             accept = "<CR>",
             refresh = "gr",
-            open = "<M-CR>"
+            open = "<C-CR>"
           },
           layout = {
             position = "bottom", -- | top | left | right
