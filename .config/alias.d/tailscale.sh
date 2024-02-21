@@ -17,14 +17,15 @@ tssh() {
     matches=$(list_clusters | grep "$1")
     cluster=$(printf $matches | fzf --select-1 | cut -d' ' -f1)
     target_host=$(tailscale status | awk '!/k3s-/ {print $2}' | grep -m 1 "$cluster")
-    printf "Connecting to %s\n" "$cluster"
-    ssh -i ~/.ssh/greenboard.uu -o StrictHostKeyChecking=no green@"$target_host"
+    [ ! -z $cluster ] && [ ! -z $target_host ] && \
+      printf "Connecting to %s\n" "$cluster" && \
+      ssh -i ~/.ssh/greenboard.uu -o StrictHostKeyChecking=no green@"$target_host"
 }
 
 tkx () {
     local matches=$(list_clusters | grep "$1")
     local cluster=$(printf $matches | fzf --select-1 | cut -d' ' -f1)
     local target_ctx=$(tailscale status | grep -v "offline" | awk '/k3s-/ {print $2}' | grep "$cluster" | fzf --select-1)
-    tailscale configure kubeconfig "$target_ctx"
+    [ ! -z $cluster ] && [ ! -z $target_ctx ] && tailscale configure kubeconfig "$target_ctx"
 }
 
