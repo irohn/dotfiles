@@ -1,33 +1,13 @@
 # ~/.zshrc
 
+# Source environment variables
+[ -d "$HOME"/.config/env.d ] && \
+  for file in "$HOME"/.config/env.d/*; do source $file; done
 
-# Set ZSH directory env var
-export ZSH=$HOME/.oh-my-zsh
-
-# Source custom environment variables
-[ -d "$HOME"/.config/environment ] && \
-  for file in "$HOME"/.config/environment/*; do source $file; done
-
-# Oh-My-Zsh plugins
-plugins=(git kubectl)
-
-# Source oh-my-zsh.sh
-[ -f "$ZSH"/oh-my-zsh.sh ] && \
-  source "$ZSH"/oh-my-zsh.sh
-
-# Source all files in alias.d
+# Source aliases and functions
 [ -d "$HOME"/.config/alias.d ] && \
-  for file in "$HOME"/.config/alias.d/*; do source $file; done   
+  for file in "$HOME"/.config/alias.d/*; do source $file; done
 
-# Add local bin directory to PATH
-[ -d "$HOME"/.local/bin ] && \
-  export PATH="$HOME"/.local/bin:"$PATH" 
-
-# Evaluate and setup zoxide (cd replacement)
-command -v zoxide > /dev/null 2>&1 && \
-  eval "$(zoxide init --cmd cd zsh)"
-
-# Evaluate starship prompt
-command -v starship > /dev/null 2>&1 && \
-  eval "$(starship init zsh)"
+[ -d "$HOME"/.config/software.d ] && \
+  for file in "$HOME"/.config/software.d/*; do source $file; done
 
