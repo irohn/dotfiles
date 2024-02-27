@@ -1,6 +1,6 @@
 
 # clusters directory in rt-versions
-clusters_dir="$HOME/greeneye/rt-versions/clusters"
+clusters_dir="$HOME/projects/greeneye/rt-versions/clusters"
 
 list_clusters() {
     local file_path sprayer_group boom_location cluster_name
