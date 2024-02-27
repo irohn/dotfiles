@@ -14,5 +14,6 @@ command -v eza > /dev/null 2>&1 && \
   alias ls='eza' && \
   alias ll='eza -lAh' && \
   alias la='eza -laa' && \
-  alias l='eza -l'
+  alias l='eza -l' && \
+  alias lt='eza --tree --color=always --icons=always'
 
