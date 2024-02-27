@@ -15,5 +15,5 @@ command -v eza > /dev/null 2>&1 && \
   alias ll='eza -lAh' && \
   alias la='eza -laa' && \
   alias l='eza -l' && \
-  alias lt='eza --tree --color=always --icons=always'
+  alias lt='eza --long --almost-all --tree --color=auto --icons=auto --git-ignore --smart-group --mounts'
 
