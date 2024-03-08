@@ -120,12 +120,27 @@ check_command() {
 }
 
 
-debug_print "using config file $(pwd)/$CONFIG_FILE"
 
 if [ ! -f "$CONFIG_FILE" ]; then
-    printf "%b could not find config file %s\n" "${ERROR}" "$CONFIG_FILE"
-    exit 1
+    printf "%b could not find config file %s\n" "${WARNING}" "$CONFIG_FILE"
+    printf "%b creating a default configuration file...\n" "${BULLET}"
+    touch "check.conf"
+    cat << EOF > "check.conf"
+# each entry should be in its own line
+# empty lines and lines starting with '#' will be ignored
+# you can specify 3 options for each entry separated by the ';' character
+# for example: <program>;<fail_type>;<fail_message>
+# possible fail_types: 'error/warning/optional', fail message cannot contain newline characters
+
+git;error;required for git integrations
+ssh;error;required for remote access
+curl;error;required for transferring data over the network
+tailscale;error;required for remote access and context
+fzf;optional;optional fuzzy-finder
+docker;optional;optional for managing containers
+EOF
 fi
+debug_print "using config file $(pwd)/$CONFIG_FILE"
 
 printf "\n%b checking programs...\n" "${BULLET}"
 while IFS= read -r line; do
