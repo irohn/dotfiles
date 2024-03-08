@@ -1,21 +1,48 @@
 #!/bin/sh
+script_dir=$(dirname "$0")
+cd "$script_dir" || exit 1
 
 
 TASK_NAME="init"
-TASKS_TO_SKIP=""
 FAILED_CHECKS=""
+CONFIG_FILE="check.conf"
+DEBUG=false
 
+help_message() {
+    echo "Usage: $0 [OPTIONS]"
+    echo "  -h, --help             Display this help message"
+    echo "  -c, --config FILE      Specify the configuration file (default: check.conf)"
+    echo "      --debug            Enable debug mode"
+    echo ""
+    echo "Description:"
+    echo "  This script checks the installation status of specified programs based on the"
+    echo "  configuration file. It provides information on installed programs and reports"
+    echo "  any failures in the checks."
+    echo ""
+    echo "Options:"
+    echo "  -h, --help             Display this help message"
+    echo "  -c, --config FILE      Specify the configuration file (default: check.conf)"
+    echo "      --debug            Enable debug mode, showing additional information"
+    echo ""
+    echo "Examples:"
+    echo "  $0                   # Run the script with default settings"
+    echo "  $0 --config custom.conf --debug   # Run the script with a custom config file and enable debug mode"
+}
 
 # parse arguments
 while [ $# -gt 0 ]; do
     case $1 in
         -h|--help)
-            printf "The cake is a lie.\n"
+            help_message
             exit 0
             ;;
-        -s|--skip)
-            TASKS_TO_SKIP="$TASKS_TO_SKIP $2"
+        -c|--config)
+            CONFIG_FILE="$2"
             shift
+            shift
+            ;;
+        --debug)
+            DEBUG=true
             shift
             ;;
         *)
@@ -41,53 +68,67 @@ CHECK="${GREEN}✔${NO_COLOR}"
 ERROR="${RED}✘${NO_COLOR}"
 WARNING="${YELLOW}!${NO_COLOR}"
 ARROW="${CYAN}➜${NO_COLOR}"
+DEBUG_ICON="[ ${PURPLE}DEBUG${NO_COLOR} ]"
 
+
+debug_print() {
+    if $DEBUG; then printf "%b %s\n" "${DEBUG_ICON}" "${@}"; fi
+}
+
+parse_config_entry() {
+    local entry="$1"
+    local program=""
+    local fail_type="error"
+    local message=""
+    if [ -n "$entry" ] && ! echo "$entry" | grep -q '^ *#'; then
+        IFS=';' read -r program fail_type message <<EOF
+$(echo "$entry" | awk -F';' '{print $1 ";" $2 ";" $3}')
+EOF
+        if [ -z "$fail_type" ]; then fail_type="error"; fi
+        if [ -z "$message" ]; then message="none"; fi
+        echo "$program;$fail_type;$message"
+    fi
+}
 
 check_command() {
     local name="$1"
     local fail_prefix="${2:-"$ERROR"}"
+    local fail_message="${3:-""}"
+    if [ "$fail_prefix" = "error" ]; then fail_prefix="$ERROR"
+    elif [ "$fail_prefix" = "err" ]; then fail_prefix="$ERROR"
+    elif [ "$fail_prefix" = "warn" ]; then fail_prefix="$WARNING"
+    elif [ "$fail_prefix" = "warning" ]; then fail_prefix="$WARNING"
+    fi
     if command -v $name > /dev/null; then
         printf "%b %b is installed at %b\n" "${CHECK}" "${BLUE}${name}${NO_COLOR}" "${PURPLE}$(which $name)${NO_COLOR}"
+        debug_print "$($name --version || echo "couldn't find version with --version flag")"
     else
-        printf "%b %b was not found\n" "${fail_prefix}" "${YELLOW}${name}${NO_COLOR}"
+        if [ "$fail_message" != "none" ]; then fail_message=", $fail_message"; else fail_message=""; fi
+        printf "%b %b was not found%s\n" "${fail_prefix}" "${YELLOW}${name}${NO_COLOR}" "${fail_message}"
         FAILED_CHECKS="$FAILED_CHECKS $name"
     fi
     sleep 0.1
 }
 
-core_programs="\
-git \
-curl \
-"
 
-essential_programs="\
-jq \
-"
+debug_print "using config file $(pwd)/$CONFIG_FILE"
 
-optional_programs="\
-nvim \
-"
-
-if echo "$TASKS_TO_SKIP" | grep -q "\bcore\b"; then
-    printf "\n%b skipping core...\n" "${ARROW}"
-else
-    printf "\n%b checking core programs...\n" "${BULLET}"
-    for program in $core_programs; do check_command "$program"; done
+if [ ! -f "$CONFIG_FILE" ]; then
+    printf "%b could not find config file %s\n" "${ERROR}" "$CONFIG_FILE"
+    exit 1
 fi
 
-if echo "$TASKS_TO_SKIP" | grep -q "\bessential\b"; then
-    printf "\n%b skipping essentials...\n" "${ARROW}"
-else
-    printf "\n%b checking essential programs...\n" "${BULLET}"
-    for program in $essential_programs; do check_command "$program"; done
-fi
-
-if echo "$TASKS_TO_SKIP" | grep -q "\bextra\b"; then
-    printf "\n%b skipping extras...\n" "${ARROW}"
-else
-    printf "\n%b checking extra programs...\n" "${BULLET}"
-    for program in $optional_programs; do check_command "$program" "$WARNING"; done
-fi
+printf "\n%b checking programs...\n" "${BULLET}"
+#for program in $programs; do check_command "$program"; done
+while IFS= read -r line; do
+    if [ "$(echo "$line" | tr -d '[:space:]')" != "" ] && [ "$(echo "$line" | cut -c1)" != "#" ]; then
+        parsed_line=$(parse_config_entry "$line")
+        program=$(echo "$parsed_line" | awk -F';' '{print $1}')
+        fail_type=$(echo "$parsed_line" | awk -F';' '{print $2}')
+        fail_message=$(echo "$parsed_line" | awk -F';' '{print $3}')
+        check_command "$program" "$fail_type" "$fail_message"
+    fi
+done < $CONFIG_FILE
 
 if [ ! -z "$FAILED_CHECKS" ]; then
     printf "\n%b some checks have failed:\n" "${ERROR}"
