@@ -6,6 +6,7 @@ cd "$script_dir" || exit 1
 VERSION="0.1.0"
 TASK_NAME="init"
 FAILED_CHECKS=""
+FAILED_OPTS=""
 CONFIG_FILE="check.conf"
 DEBUG=false
 
@@ -100,14 +101,17 @@ check_command() {
     local name="$1"
     local fail_prefix="${2:-"$ERROR"}"
     local fail_message="${3:-""}"
-    if [ "$fail_prefix" = "error" ]; then fail_prefix="$ERROR"
-    elif [ "$fail_prefix" = "err" ]; then fail_prefix="$ERROR"
-    elif [ "$fail_prefix" = "warning" ]; then fail_prefix="$WARNING"
-    elif [ "$fail_prefix" = "warn" ]; then fail_prefix="$WARNING"
-    fi
     if command -v $name > /dev/null 2>&1; then
         printf "%b %b is installed at %b\n" "${CHECK}" "${BLUE}${name}${NO_COLOR}" "${PURPLE}$(which $name)${NO_COLOR}"
     else
+        if [ "$fail_prefix" = "error" ] || [ "$fail_prefix" = "err" ]; then
+            fail_prefix="$ERROR"
+        elif [ "$fail_prefix" = "warning" ] || [ "$fail_prefix" = "warn" ]; then
+            fail_prefix="$WARNING"
+        elif [ "$fail_prefix" = "opt" ] || [ "$fail_prefix" = "option" ] || [ "$fail_prefix" = "optional" ]; then
+            fail_prefix="$ARROW"
+            FAILED_OPTS="$failed_opts $name"
+        fi
         if [ "$fail_message" != "none" ]; then fail_message=", $fail_message"; else fail_message=""; fi
         printf "%b %b was not found%s\n" "${fail_prefix}" "${YELLOW}${name}${NO_COLOR}" "${fail_message}"
         FAILED_CHECKS="$FAILED_CHECKS $name"
@@ -135,10 +139,16 @@ while IFS= read -r line; do
 done < $CONFIG_FILE
 
 if [ ! -z "$FAILED_CHECKS" ]; then
-    printf "\n%b some checks have failed:\n" "${ERROR}"
-    for check in $FAILED_CHECKS; do
-        printf "%b %s\n" "${BULLET}" "$check"
+    printf "\n%b some checks have failed:\n" "${BULLET}"
+    for failed_check in $FAILED_CHECKS; do
+        case "$FAILED_OPTS" in
+            *"$failed_check"*)
+                printf "  %b %s (optional)\n" "${ARROW}" "$failed_check"
+                ;;
+            *)
+                printf "  %b %s\n" "${ERROR}" "$failed_check"
+                ;;
+        esac
     done
-else
-    printf "\n%b all checks passed\n" "${CHECK}"
 fi
+
