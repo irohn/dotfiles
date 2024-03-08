@@ -1,0 +1,99 @@
+#!/bin/sh
+
+
+TASK_NAME="init"
+TASKS_TO_SKIP=""
+FAILED_CHECKS=""
+
+
+# parse arguments
+while [ $# -gt 0 ]; do
+    case $1 in
+        -h|--help)
+            printf "The cake is a lie.\n"
+            exit 0
+            ;;
+        -s|--skip)
+            TASKS_TO_SKIP="$TASKS_TO_SKIP $2"
+            shift
+            shift
+            ;;
+        *)
+            printf "unknown argument $1\n"
+            exit 1
+            ;;
+    esac
+done
+
+
+RED="\033[38;5;1m"
+GREEN="\033[38;5;2m"
+YELLOW="\033[38;5;3m"
+BLUE="\033[38;5;4m"
+PURPLE="\033[38;5;5m"
+CYAN="\033[38;5;6m"
+WHITE="\033[38;5;7m"
+GRAY="\033[38;5;8m"
+NO_COLOR="\033[0m"
+
+BULLET="${WHITE}•${NO_COLOR}"
+CHECK="${GREEN}✔${NO_COLOR}"
+ERROR="${RED}✘${NO_COLOR}"
+WARNING="${YELLOW}!${NO_COLOR}"
+ARROW="${CYAN}➜${NO_COLOR}"
+
+
+check_command() {
+    local name="$1"
+    local fail_prefix="${2:-"$ERROR"}"
+    if command -v $name > /dev/null; then
+        printf "%b %b is installed at %b\n" "${CHECK}" "${BLUE}${name}${NO_COLOR}" "${PURPLE}$(which $name)${NO_COLOR}"
+    else
+        printf "%b %b was not found\n" "${fail_prefix}" "${YELLOW}${name}${NO_COLOR}"
+        FAILED_CHECKS="$FAILED_CHECKS $name"
+    fi
+    sleep 0.1
+}
+
+core_programs="\
+git \
+curl \
+"
+
+essential_programs="\
+jq \
+"
+
+optional_programs="\
+nvim \
+"
+
+if echo "$TASKS_TO_SKIP" | grep -q "\bcore\b"; then
+    printf "\n%b skipping core...\n" "${ARROW}"
+else
+    printf "\n%b checking core programs...\n" "${BULLET}"
+    for program in $core_programs; do check_command "$program"; done
+fi
+
+if echo "$TASKS_TO_SKIP" | grep -q "\bessential\b"; then
+    printf "\n%b skipping essentials...\n" "${ARROW}"
+else
+    printf "\n%b checking essential programs...\n" "${BULLET}"
+    for program in $essential_programs; do check_command "$program"; done
+fi
+
+if echo "$TASKS_TO_SKIP" | grep -q "\bextra\b"; then
+    printf "\n%b skipping extras...\n" "${ARROW}"
+else
+    printf "\n%b checking extra programs...\n" "${BULLET}"
+    for program in $optional_programs; do check_command "$program" "$WARNING"; done
+fi
+
+if [ ! -z "$FAILED_CHECKS" ]; then
+    printf "\n%b some checks have failed:\n" "${ERROR}"
+    for check in $FAILED_CHECKS; do
+        printf "%b %s\n" "${BULLET}" "$check"
+    done
+else
+    printf "\n%b all checks passed\n" "${CHECK}"
+fi
