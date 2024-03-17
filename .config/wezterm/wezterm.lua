@@ -3,7 +3,7 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 -- Color scheme
-config.color_scheme = "Tokyo Night"
+config.color_scheme = "kanagawabones"
 
 -- Window customizations
 config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
