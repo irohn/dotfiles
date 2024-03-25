@@ -6,7 +6,7 @@ tms() {
     selected=$1
   else
     selected=$(find ~/projects/personal ~/projects/greeneye ~/projects/oss -mindepth 1 -maxdepth 1 -type d | \
-      fzf --preview "ls --color=always {}")
+      fzf --preview "ls -A --color=always {}")
   fi
 
   if [ -z "$selected" ]; then
