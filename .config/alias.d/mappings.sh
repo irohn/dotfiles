@@ -6,11 +6,11 @@ tms() {
     selected=$1
   else
     selected=$(find ~/projects/personal ~/projects/greeneye ~/projects/oss -mindepth 1 -maxdepth 1 -type d | \
-      fzf --preview 'eza -la {}')
+      fzf --preview "ls --color=always {}")
   fi
 
   if [ -z "$selected" ]; then
-    exit 0
+    return 0
   fi
 
   selected_name=$(basename "$selected" | tr . _)
@@ -18,7 +18,7 @@ tms() {
 
   if [ -z "$TMUX" ] && [ -z "$tmux_running" ]; then
     tmux new-session -s $selected_name -c $selected
-    exit 0
+    return 0
   fi
 
   if ! tmux has-session -t=$selected_name 2> /dev/null; then
