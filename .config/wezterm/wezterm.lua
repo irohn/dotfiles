@@ -6,7 +6,7 @@ local config = wezterm.config_builder()
 config.color_scheme = "kanagawabones"
 
 -- Window customizations
-config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
+config.window_decorations = "RESIZE"
 config.window_padding = { left = 2, right = 2, top = 0, bottom = 0 }
 config.hide_tab_bar_if_only_one_tab = true
 
