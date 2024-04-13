@@ -2,7 +2,7 @@
 export ZSH=$HOME/.oh-my-zsh
 
 # Oh-My-Zsh plugins
-plugins=(git kubectl)
+plugins=(git vi-mode kubectl)
 
 # Source oh-my-zsh.sh
 [ -f "$ZSH"/oh-my-zsh.sh ] && \
