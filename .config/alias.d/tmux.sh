@@ -1,11 +1,10 @@
 
-
 tms() {
   # Sessionize a directory or re-attach to existing one in selected paths
   if [ $# -eq 1 ]; then
     selected=$1
   else
-    selected=$(find ~/projects/personal ~/projects/greeneye ~/projects/oss -mindepth 1 -maxdepth 1 -type d | \
+    selected=$(find ~/.config ~/projects/personal ~/projects/greeneye ~/projects/oss -mindepth 1 -maxdepth 1 -type d | \
       fzf --preview "ls -A --color=always {}")
   fi
 
