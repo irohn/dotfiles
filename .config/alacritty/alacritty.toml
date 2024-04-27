@@ -4,6 +4,7 @@
 padding = { x = 0, y = 0 }
 decorations = "None"
 startup_mode = "Maximized"
+opacity = 0.95
 
 [scrolling]
 history = 10000
