@@ -22,7 +22,8 @@ _darcs
 ^/COPYING
 
 # Thescript that calls stow
-\setup.sh
+setup.sh
 
 # Other executables
-\bin
+bin
+nix
