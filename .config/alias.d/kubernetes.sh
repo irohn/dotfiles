@@ -9,3 +9,4 @@ alias fra='flux reconcile kustomization flux-system --with-source'
 klogs() {
   pod_name=$( kubectl get pods --all-namespaces -o custom-columns=NAMESPACE:.metadata.namespace,NAME:.metadata.name --no-headers | fzf )
 }
+
